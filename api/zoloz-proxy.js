@@ -1,7 +1,6 @@
-// File: api/zoloz-proxy.js (Vercel - FINAL FIX: snake_case query string)
+// File: api/zoloz-proxy.js (Vercel - FINAL FIX: parameter via HTTP headers)
 
 import https from 'https';
-import { URLSearchParams } from 'url';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -10,33 +9,30 @@ export default async function handler(req, res) {
 
   const {
     method,
-    accessKey,
+    access_key,
     version,
-    signType,
-    reqTime,
+    sign_type,
+    req_time,
     sign,
     bizContent
   } = req.body;
 
   const payload = JSON.stringify({ bizContent });
 
-  // Gunakan snake_case untuk parameter
-  const params = new URLSearchParams({
-    access_key: accessKey,
-    sign_type: signType,
-    req_time: reqTime,
-    method,
-    version,
-    sign
-  });
-
   const options = {
     hostname: 'id-production-api.zoloz.com',
-    path: `/api/v1/zoloz/facecapture/initialize?${params.toString()}`,
+    path: '/api/v1/zoloz/facecapture/initialize',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Expect': ''
+      'access_key': access_key,
+      'sign_type': sign_type,
+      'req_time': req_time,
+      'sign': sign,
+      'version': version,
+      'method': method,
+      'Expect': '',
+      'Content-Length': Buffer.byteLength(payload)
     }
   };
 
@@ -59,4 +55,4 @@ export default async function handler(req, res) {
 
   proxyReq.write(payload);
   proxyReq.end();
-} 
+}
