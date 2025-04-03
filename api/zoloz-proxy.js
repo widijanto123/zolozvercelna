@@ -1,4 +1,4 @@
-// File: api/zoloz-proxy.js (untuk Vercel - versi query string)
+// File: api/zoloz-proxy.js (Vercel - FINAL FIX: snake_case query string)
 
 import https from 'https';
 import { URLSearchParams } from 'url';
@@ -20,13 +20,13 @@ export default async function handler(req, res) {
 
   const payload = JSON.stringify({ bizContent });
 
-  // Buat query string
+  // Gunakan snake_case untuk parameter
   const params = new URLSearchParams({
+    access_key: accessKey,
+    sign_type: signType,
+    req_time: reqTime,
     method,
-    accessKey,
     version,
-    signType,
-    reqTime,
     sign
   });
 
