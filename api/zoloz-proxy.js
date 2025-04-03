@@ -1,4 +1,4 @@
-// File: api/zoloz-proxy.js
+// File: api/zoloz-proxy.js (untuk Vercel)
 
 import https from 'https';
 
