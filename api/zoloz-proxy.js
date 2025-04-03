@@ -1,4 +1,4 @@
-// File: api/zoloz-proxy.js (Vercel - FINAL FIX: parameter via HTTP headers)
+// File: api/zoloz-proxy.js (FINAL - kirim semua parameter via HEADER)
 
 import https from 'https';
 
@@ -8,8 +8,8 @@ export default async function handler(req, res) {
   }
 
   const {
-    method,
     access_key,
+    method,
     version,
     sign_type,
     req_time,
@@ -26,11 +26,11 @@ export default async function handler(req, res) {
     headers: {
       'Content-Type': 'application/json',
       'access_key': access_key,
+      'method': method,
+      'version': version,
       'sign_type': sign_type,
       'req_time': req_time,
       'sign': sign,
-      'version': version,
-      'method': method,
       'Expect': '',
       'Content-Length': Buffer.byteLength(payload)
     }
