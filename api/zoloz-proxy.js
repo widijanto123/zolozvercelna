@@ -1,4 +1,4 @@
-// File: api/zoloz-proxy.js (FINAL - kirim semua parameter via HEADER)
+// File: api/zoloz-proxy.js (FINAL - paksa header lowercase untuk Zoloz)
 
 import https from 'https';
 
@@ -23,17 +23,17 @@ export default async function handler(req, res) {
     hostname: 'id-production-api.zoloz.com',
     path: '/api/v1/zoloz/facecapture/initialize',
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'access_key': access_key,
-      'method': method,
-      'version': version,
-      'sign_type': sign_type,
-      'req_time': req_time,
-      'sign': sign,
-      'Expect': '',
-      'Content-Length': Buffer.byteLength(payload)
-    }
+    headers: Object.fromEntries([
+      ['content-type', 'application/json'],
+      ['access_key', access_key],
+      ['method', method],
+      ['version', version],
+      ['sign_type', sign_type],
+      ['req_time', req_time],
+      ['sign', sign],
+      ['expect', ''],
+      ['content-length', Buffer.byteLength(payload).toString()]
+    ])
   };
 
   const proxyReq = https.request(options, (proxyRes) => {
