@@ -1,6 +1,7 @@
-// File: api/zoloz-proxy.js (untuk Vercel)
+// File: api/zoloz-proxy.js (untuk Vercel - versi query string)
 
 import https from 'https';
+import { URLSearchParams } from 'url';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,19 +20,22 @@ export default async function handler(req, res) {
 
   const payload = JSON.stringify({ bizContent });
 
+  // Buat query string
+  const params = new URLSearchParams({
+    method,
+    accessKey,
+    version,
+    signType,
+    reqTime,
+    sign
+  });
+
   const options = {
     hostname: 'id-production-api.zoloz.com',
-    path: '/api/v1/zoloz/facecapture/initialize',
+    path: `/api/v1/zoloz/facecapture/initialize?${params.toString()}`,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'access_key': accessKey,
-      'sign_type': signType,
-      'req_time': reqTime,
-      'sign': sign,
-      'version': version,
-      'method': method,
-      'Content-Length': Buffer.byteLength(payload),
       'Expect': ''
     }
   };
@@ -55,4 +59,4 @@ export default async function handler(req, res) {
 
   proxyReq.write(payload);
   proxyReq.end();
-}
+} 
